@@ -1,0 +1,13 @@
+# Use the official PostgreSQL image as the base image
+FROM postgres:16
+
+# Set environment variables for PostgreSQL
+ENV POSTGRES_USER=root
+ENV POSTGRES_PASSWORD=localhost
+ENV POSTGRES_DB=checkbox
+
+# Expose the PostgreSQL default port
+EXPOSE 5432
+
+# Default command to run the database
+CMD ["postgres"]
