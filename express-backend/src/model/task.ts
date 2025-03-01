@@ -23,6 +23,24 @@ class Task {
       ["id", "name", "description", "due_date"]
     );
   }
+
+  async getTotal() {
+    return await db("tasks").count("id as count").first();
+  }
+
+  async getAll({ page, limit }: { page: number; limit: number }) {
+    const tasks = await db("tasks")
+      .select("*")
+      .limit(limit)
+      .offset(page * limit - limit);
+    const total = await this.getTotal();
+
+    return {
+      tasks,
+      total: total?.count,
+    };
+  }
+
 }
 
 export default Task;

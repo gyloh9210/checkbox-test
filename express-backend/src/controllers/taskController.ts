@@ -27,3 +27,24 @@ export const createTask = async (req: Request, res: Response) => {
     res.status(400).json({ error: (error as Error).message });
   }
 };
+
+// Get all tasks
+export const getTasks = async (req: Request, res: Response) => {
+  try {
+    const page = req.query.page ? parseInt(req.query.page as string) : 1;
+    const limit = 100;
+    
+    const taskModel = new Task();
+
+    const { tasks, total } = await taskModel.getAll({ page, limit });
+
+    res.status(200).json({
+      tasks,
+      page,
+      limit,
+      total,
+    });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
