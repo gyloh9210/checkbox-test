@@ -3,7 +3,7 @@ import { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable("tasks", (table) => {
     table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()")); // UUID primary key
-    table.string("name").notNullable();
+    table.text("name").notNullable();
     table.text("description").notNullable();
     table.date("due_date").notNullable();
     table.boolean("is_urgent").defaultTo(false);
