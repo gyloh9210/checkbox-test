@@ -65,6 +65,10 @@ class Task {
       ["id", "name", "description", "due_date"]
     );
   }
+
+  async delete(id: string) {
+    return db("tasks").where({ id }).delete();
+  }
 }
 
 export default Task;

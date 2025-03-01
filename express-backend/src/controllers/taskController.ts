@@ -91,3 +91,20 @@ export const updateTask = async (req: Request, res: Response) => {
   }
 };
 
+// Delete a task by ID
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const taskModel = new Task();
+
+    const deleted = await taskModel.delete(req.params.id);
+
+    if (!deleted) {
+      res.status(404).json({ error: "Task not found" });
+      return;
+    }
+
+    res.status(200).json({ message: "Task deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
