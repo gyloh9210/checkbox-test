@@ -7,6 +7,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "migrate": "knex migrate:latest --knexfile ./src/knexfile.ts",
+    "migrate:rollback": "knex migrate:rollback --knexfile ./src/knexfile.ts",
     "seed": "knex seed:run --knexfile ./src/knexfile.ts"
   },
   "keywords": [],
@@ -19,6 +20,7 @@
     "pg": "^8.13.3"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.5.1",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.5",
     "ts-node": "^10.9.2",
