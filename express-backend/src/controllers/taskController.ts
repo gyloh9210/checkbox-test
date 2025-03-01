@@ -33,10 +33,19 @@ export const getTasks = async (req: Request, res: Response) => {
   try {
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = 100;
-    
+    const keyword = req.query?.keyword ?? "";
+    const sortBy = req.query?.sortBy ?? "created_at";
+    const order = req.query?.order ?? "desc";
+
     const taskModel = new Task();
 
-    const { tasks, total } = await taskModel.getAll({ page, limit });
+    const { tasks, total } = await taskModel.getAll({
+      page,
+      limit,
+      keyword: keyword as string,
+      sortBy: sortBy as string,
+      order: order as string,
+    });
 
     res.status(200).json({
       tasks,
@@ -53,7 +62,7 @@ export const getTasks = async (req: Request, res: Response) => {
 export const getTaskById = async (req: Request, res: Response) => {
   try {
     const taskModel = new Task();
-    
+
     const task = await taskModel.get(req.params.id);
 
     if (!task) {
@@ -71,7 +80,7 @@ export const getTaskById = async (req: Request, res: Response) => {
 export const updateTask = async (req: Request, res: Response) => {
   try {
     await taskSchema.validate(req.body);
-    
+
     const taskModel = new Task();
 
     const updated = await taskModel.update({
@@ -85,7 +94,9 @@ export const updateTask = async (req: Request, res: Response) => {
       res.status(404).json({ error: "Task not found" });
       return;
     }
-    res.status(200).json({ message: "Task updated successfully", task: updated[0] });
+    res
+      .status(200)
+      .json({ message: "Task updated successfully", task: updated[0] });
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
   }

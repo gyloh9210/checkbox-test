@@ -1,4 +1,4 @@
-import knex, { Knex } from "knex";
+import knex from "knex";
 import config from "../knexfile";
 
 // Initialize Knex with configuration
@@ -24,16 +24,33 @@ class Task {
     );
   }
 
-  async getTotal() {
-    return await db("tasks").count("id as count").first();
+  async getTotal(keyword: string) {
+    return await db("tasks")
+      .count("id as count")
+      .where("name", "like", `%${keyword}%`)
+      .first();
   }
 
-  async getAll({ page, limit }: { page: number; limit: number }) {
+  async getAll({
+    page,
+    limit,
+    keyword,
+    sortBy,
+    order,
+  }: {
+    page: number;
+    limit: number;
+    keyword: string;
+    sortBy: string;
+    order: string;
+  }) {
     const tasks = await db("tasks")
       .select("*")
       .limit(limit)
+      .orderBy(sortBy, order)
+      .where("name", "like", `%${keyword}%`)
       .offset(page * limit - limit);
-    const total = await this.getTotal();
+    const total = await this.getTotal(keyword);
 
     return {
       tasks,
