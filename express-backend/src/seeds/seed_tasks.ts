@@ -5,7 +5,6 @@ interface ITask {
   name: string;
   description: string;
   due_date: Date;
-  is_urgent: boolean;
 }
 
 export async function seed(knex: Knex): Promise<void> {
@@ -22,7 +21,6 @@ export async function seed(knex: Knex): Promise<void> {
         from: new Date(2025, 1, 1),
         to: new Date(2025, 3, 30),
       }),
-      is_urgent: i % 3 === 0,
     });
   }
 
