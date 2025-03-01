@@ -6,7 +6,7 @@ app.use(express.json());
 
 app.post("/tasks", taskController.createTask);
 app.get("/tasks", taskController.getTasks);
-
+app.get("/tasks/:id", taskController.getTaskById);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

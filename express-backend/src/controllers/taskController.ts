@@ -48,3 +48,21 @@ export const getTasks = async (req: Request, res: Response) => {
     res.status(500).json({ error: (error as Error).message });
   }
 };
+
+// Get a single task by ID
+export const getTaskById = async (req: Request, res: Response) => {
+  try {
+    const taskModel = new Task();
+    
+    const task = await taskModel.get(req.params.id);
+
+    if (!task) {
+      res.status(404).json({ error: "Task not found" });
+      return;
+    }
+
+    res.status(200).json(task);
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};

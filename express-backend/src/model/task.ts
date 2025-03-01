@@ -41,6 +41,10 @@ class Task {
     };
   }
 
+  async get(id: string) {
+    return db("tasks").where({ id }).first();
+  }
+
 }
 
 export default Task;
