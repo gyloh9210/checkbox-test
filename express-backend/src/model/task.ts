@@ -45,6 +45,26 @@ class Task {
     return db("tasks").where({ id }).first();
   }
 
+  async update({
+    id,
+    name,
+    description,
+    dueDate,
+  }: {
+    id: string;
+    name: string;
+    description: string;
+    dueDate: Date;
+  }) {
+    return db("tasks").where({ id }).update(
+      {
+        name,
+        description,
+        due_date: dueDate,
+      },
+      ["id", "name", "description", "due_date"]
+    );
+  }
 }
 
 export default Task;

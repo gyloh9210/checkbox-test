@@ -66,3 +66,28 @@ export const getTaskById = async (req: Request, res: Response) => {
     res.status(500).json({ error: (error as Error).message });
   }
 };
+
+// Update a task by ID
+export const updateTask = async (req: Request, res: Response) => {
+  try {
+    await taskSchema.validate(req.body);
+    
+    const taskModel = new Task();
+
+    const updated = await taskModel.update({
+      id: req.params.id,
+      name: req.body.name,
+      description: req.body.description,
+      dueDate: req.body.due_date,
+    });
+
+    if (!updated) {
+      res.status(404).json({ error: "Task not found" });
+      return;
+    }
+    res.status(200).json({ message: "Task updated successfully", task: updated[0] });
+  } catch (error) {
+    res.status(400).json({ error: (error as Error).message });
+  }
+};
+
