@@ -40,7 +40,7 @@ const Task = ({ data }: { data: ITask }) => {
 
   const handleCloseTask = () => {
     setEditing(false);
-  }
+  };
 
   return editing ? (
     <TaskForm
@@ -51,7 +51,7 @@ const Task = ({ data }: { data: ITask }) => {
       onClose={handleCloseTask}
     />
   ) : (
-    <Card className="relative mb-2 shadow-md border-round-lg w-full">
+    <Card className="relative mb-2 shadow-md border-50 surface-overlay border-1 border-round-lg w-full">
       <div className="absolute top-10 right-0 mr-2">
         <Button
           className="mr-2"
