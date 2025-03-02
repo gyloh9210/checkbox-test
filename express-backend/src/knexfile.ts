@@ -1,13 +1,14 @@
 import type { Knex } from "knex";
+import { env } from "process";
 
 const config: { [key: string]: Knex.Config } = {
   development: {
-    client: "pg",
+    client: env.DB_CLIENT,
     connection: {
-      host: "127.0.0.1",
-      user: "root",
-      password: "localhost",
-      database: "checkbox",
+      host: env.DB_HOST,
+      user: env.DB_USERNAME,
+      password: env.DB_PASSWORD,
+      database: env.DB_NAME,
     },
     migrations: {
       directory: "./migrations",
