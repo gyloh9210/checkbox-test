@@ -5,6 +5,8 @@ import { Button } from "primereact/button";
 import moment from "moment";
 import { useToast } from "../context/ToastContext";
 import { useDeleteTaskMutation } from "../api/task";
+import { useState } from "react";
+import TaskForm from "./TaskForm";
 
 const renderDateTag = (dueDate: string) => {
   const displayDate = moment(dueDate).format("YYYY-MM-DD");
@@ -24,16 +26,39 @@ const renderDateTag = (dueDate: string) => {
 
 const Task = ({ data }: { data: ITask }) => {
   const { showToast } = useToast();
-  const { mutateAsync: deleteTask } = useDeleteTaskMutation()
+  const { mutateAsync: deleteTask } = useDeleteTaskMutation();
+  const [editing, setEditing] = useState<boolean>(false);
 
   const handleDeleteTask = (id: string) => {
     deleteTask(id);
     showToast("Deleted successfully", "success");
   };
 
-  return (
+  const handleEditTask = () => {
+    setEditing(true);
+  };
+
+  const handleCloseTask = () => {
+    setEditing(false);
+  }
+
+  return editing ? (
+    <TaskForm
+      id={data.id}
+      description={data.description}
+      name={data.name}
+      dueDate={new Date(data.due_date)}
+      onClose={handleCloseTask}
+    />
+  ) : (
     <Card className="relative mb-2 shadow-md border-round-lg w-full">
       <div className="absolute top-10 right-0 mr-2">
+        <Button
+          className="mr-2"
+          icon="pi pi-pencil"
+          severity="warning"
+          onClick={() => handleEditTask()}
+        />
         <Button
           icon="pi pi-trash"
           severity="danger"

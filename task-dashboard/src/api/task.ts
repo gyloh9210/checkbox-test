@@ -25,7 +25,8 @@ type GetTasksParam = {
   order: string;
 };
 
-type StoreTaskParam = {
+type StoreOrUpdateTaskParam = {
+  id?: string;
   dueDate: string;
   description: string;
   name: string;
@@ -82,11 +83,21 @@ export const useDeleteTaskMutation = () => {
   });
 };
 
-export const useStoreTaskMutation = () => {
+export const useStoreOrUpdateTaskMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<StoreTaskResponse, unknown, StoreTaskParam>({
-    mutationFn: async ({ dueDate, name, description }) => {
+  return useMutation<StoreTaskResponse, unknown, StoreOrUpdateTaskParam>({
+    mutationFn: async ({ id, dueDate, name, description }) => {
+      if (id) {
+        const { data } = await instance.put(`/tasks/${id}`, {
+          due_date: dueDate,
+          name,
+          description,
+        });
+
+        return data;
+      }
+
       const { data } = await instance.post("/tasks", {
         due_date: dueDate,
         name,

@@ -1,6 +1,6 @@
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { useStoreTaskMutation } from "../api/task";
+import { useStoreOrUpdateTaskMutation } from "../api/task";
 import { ChangeEvent, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -10,13 +10,23 @@ import { useToast } from "../context/ToastContext";
 
 type TaskFormProps = {
   onClose: () => void;
+  id?: string;
+  dueDate?: Date;
+  name?: string;
+  description?: string;
 };
 
-const TaskForm = ({ onClose }: TaskFormProps) => {
-  const { mutateAsync: createTask } = useStoreTaskMutation();
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [dueDate, setDueDate] = useState<Date | null>(new Date());
+const TaskForm = ({
+  onClose,
+  id,
+  dueDate,
+  name,
+  description,
+}: TaskFormProps) => {
+  const { mutateAsync: saveTask } = useStoreOrUpdateTaskMutation();
+  const [newName, setName] = useState<string>(name ?? "");
+  const [newDescription, setDescription] = useState<string>(description ?? "");
+  const [newDueDate, setDueDate] = useState<Date | null>(dueDate ?? new Date());
   const { showToast } = useToast();
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,13 +37,14 @@ const TaskForm = ({ onClose }: TaskFormProps) => {
     setDescription(e.target.value);
   };
 
-  const handleCreateTask = async () => {
-    await createTask({
-      name,
-      description,
-      dueDate: moment(dueDate).format("YYYY-MM-DD"),
+  const handleSaveTask = async () => {
+    await saveTask({
+      id,
+      name: newName,
+      description: newDescription,
+      dueDate: moment(newDueDate).format("YYYY-MM-DD"),
     });
-    showToast("Created successfully", "success");
+    showToast("Saved successfully", "success");
     onClose();
   };
 
@@ -43,8 +54,8 @@ const TaskForm = ({ onClose }: TaskFormProps) => {
         <Button
           label="Save"
           severity="success"
-          disabled={!name || !description || !dueDate}
-          onClick={handleCreateTask}
+          disabled={!newName || !newDescription || !newDueDate}
+          onClick={handleSaveTask}
         />
         <Button
           label="Cancel"
@@ -63,7 +74,7 @@ const TaskForm = ({ onClose }: TaskFormProps) => {
     >
       <div className="block mb-2">
         <InputText
-          value={name}
+          value={newName}
           onChange={handleNameChange}
           placeholder="Task name"
           className="w-full"
@@ -72,7 +83,7 @@ const TaskForm = ({ onClose }: TaskFormProps) => {
 
       <div className="block mb-2">
         <InputTextarea
-          value={description}
+          value={newDescription}
           placeholder="Task description"
           onChange={handleDescriptionChange}
           className="w-full"
@@ -83,7 +94,7 @@ const TaskForm = ({ onClose }: TaskFormProps) => {
         <Calendar
           placeholder="Due date"
           dateFormat="dd/mm/yy"
-          value={dueDate}
+          value={newDueDate}
           onChange={(e) => setDueDate(e.target.value as Date)}
         />
       </div>
