@@ -1,7 +1,10 @@
 import express from "express";
+import cors from "cors";
 import * as taskController from "./controllers/taskController";
 
 const app = express();
+
+app.use(cors())
 app.use(express.json());
 
 app.post("/tasks", taskController.createTask);
