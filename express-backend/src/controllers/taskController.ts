@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as yup from "yup";
-import Task from "../model/Task";
+import Task from "../model/task";
 
 // Define the validation schema using yup
 const taskSchema = yup.object().shape({
