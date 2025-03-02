@@ -12,13 +12,37 @@ type TaskResponse = {
   limit: number;
   total: number;
   page: number;
-}
+};
 
-export const useGetTasksQuery = () => {
+type GetTasksParam = {
+  page: number;
+  keyword: string;
+  sortBy: string;
+  order: string;
+};
+
+export const useGetTasksQuery = ({
+  page,
+  keyword,
+  sortBy,
+  order,
+}: GetTasksParam) => {
   return useQuery<TaskResponse>({
-    queryKey: ["tasks"],
+    queryKey: ["tasks", {
+      page,
+      keyword,
+      sortBy,
+      order,
+    }],
     queryFn: async () => {
-      const { data } = await instance.get("/tasks");
+      const { data } = await instance.get("/tasks", {
+        params: {
+          page,
+          keyword,
+          sortBy,
+          order,
+        },
+      });
       return data;
     },
   });
