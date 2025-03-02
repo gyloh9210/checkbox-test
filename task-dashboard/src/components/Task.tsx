@@ -1,7 +1,10 @@
 import { Card } from "primereact/card";
 import { Tag } from "primereact/tag";
 import { ITask } from "../types/task";
+import { Button } from "primereact/button";
 import moment from "moment";
+import { useToast } from "../context/ToastContext";
+import { useDeleteTaskMutation } from "../api/task";
 
 const renderDateTag = (dueDate: string) => {
   const displayDate = moment(dueDate).format("YYYY-MM-DD");
@@ -20,8 +23,23 @@ const renderDateTag = (dueDate: string) => {
 };
 
 const Task = ({ data }: { data: ITask }) => {
+  const { showToast } = useToast();
+  const { mutateAsync: deleteTask } = useDeleteTaskMutation()
+
+  const handleDeleteTask = (id: string) => {
+    deleteTask(id);
+    showToast("Deleted successfully", "success");
+  };
+
   return (
-    <Card className="mb-2 shadow-md border-round-lg w-full">
+    <Card className="relative mb-2 shadow-md border-round-lg w-full">
+      <div className="absolute top-10 right-0 mr-2">
+        <Button
+          icon="pi pi-trash"
+          severity="danger"
+          onClick={() => handleDeleteTask(data.id)}
+        />
+      </div>
       <div className="flex justify-between align-items-center">
         <h2 className="text-xl font-semibold">{data.name}</h2>
       </div>
