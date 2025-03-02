@@ -6,6 +6,8 @@ import { ITask } from "../types/task";
 import Task from "./Task";
 import { InputText } from "primereact/inputtext";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { Button } from "primereact/button";
+import TaskForm from "./TaskForm";
 
 const ORDER_BY = ["asc", "desc"];
 const SORT_BY = [
@@ -14,6 +16,7 @@ const SORT_BY = [
 ];
 
 const TaskList = () => {
+  const [creating, setCreating] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>("");
   const debouncedSearch = useDebounce(keyword, 1000); // prevent overwhelming requests
   const [sortBy, setSortby] = useState<string>("created_at");
@@ -21,7 +24,7 @@ const TaskList = () => {
   const [page, setPage] = useState<number>(0);
   const { data, isFetched } = useGetTasksQuery({
     page: page + 1,
-    keyword: debouncedSearch,
+    keyword: debouncedSearch.trim(),
     sortBy,
     order,
   });
@@ -35,13 +38,21 @@ const TaskList = () => {
   };
 
   const handleSortByChange = (e: DropdownChangeEvent) => {
-    console.log(e.target.value)
+    console.log(e.target.value);
     setSortby(e.target.value);
   };
 
   const handleOrderChange = (e: DropdownChangeEvent) => {
     setOrder(e.target.value);
   };
+
+  const handleShowForm = () => {
+    setCreating(true);
+  }
+
+  const closeForm = () => {
+    setCreating(false);
+  }
 
   return (
     <div>
@@ -68,7 +79,19 @@ const TaskList = () => {
           placeholder="Order"
           className="ml-2"
         />
+        <Button
+          icon="pi pi-plus"
+          severity="success"
+          className="ml-2"
+          disabled={creating}
+          onClick={() => handleShowForm()}
+        />
       </div>
+      {creating && (
+        <div className="m-3">
+          <TaskForm onClose={closeForm} />
+        </div>
+      )}
       <div className="overflow-scroll surface-overlay m-3 h-30rem">
         {isFetched ? (
           data?.tasks.map((task: ITask) => <Task key={task.id} data={task} />)
@@ -87,15 +110,3 @@ const TaskList = () => {
 };
 
 export default TaskList;
-
-/**
- * todo:
- * TaskList
- * - search
- * - sort
- *
- * Task
- * - create
- * - edit
- * - delete
- */
