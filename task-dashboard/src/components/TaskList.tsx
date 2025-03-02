@@ -57,6 +57,7 @@ const TaskList = () => {
   return (
     <div>
       <h2 className="text-center p-0 m-0">Task List</h2>
+      {/* Search bar for sorting and task searching */}
       <div className="px-3">
         <InputText
           value={keyword}
@@ -87,11 +88,15 @@ const TaskList = () => {
           onClick={() => handleShowForm()}
         />
       </div>
+
+      {/* Task form for creating a new task */}
       {creating && (
         <div className="m-3">
           <TaskForm onClose={closeForm} />
         </div>
       )}
+
+      {/* Task list */}
       <div className="overflow-scroll surface-overlay m-3 h-30rem">
         {isFetched ? (
           data?.tasks.map((task: ITask) => <Task key={task.id} data={task} />)
@@ -99,6 +104,8 @@ const TaskList = () => {
           <div className="text-center">Loading...</div>
         )}
       </div>
+
+      {/* Pagination */}
       <Paginator
         first={page * 100}
         rows={data?.limit}
