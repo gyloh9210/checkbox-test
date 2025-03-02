@@ -1,10 +1,17 @@
 import { ChangeEvent, useState } from "react";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
-import { useDebounce } from '@uidotdev/usehooks';
+import { useDebounce } from "@uidotdev/usehooks";
 import { useGetTasksQuery } from "../api/task";
 import { ITask } from "../types/task";
 import Task from "./Task";
 import { InputText } from "primereact/inputtext";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+
+const ORDER_BY = ["asc", "desc"];
+const SORT_BY = [
+  { label: "Created at", code: "created_at" },
+  { label: "Due Date", code: "due_date" },
+];
 
 const TaskList = () => {
   const [keyword, setKeyword] = useState<string>("");
@@ -24,8 +31,17 @@ const TaskList = () => {
   };
 
   const handleKeywordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value)
-  }
+    setKeyword(e.target.value);
+  };
+
+  const handleSortByChange = (e: DropdownChangeEvent) => {
+    console.log(e.target.value)
+    setSortby(e.target.value);
+  };
+
+  const handleOrderChange = (e: DropdownChangeEvent) => {
+    setOrder(e.target.value);
+  };
 
   return (
     <div>
@@ -35,6 +51,22 @@ const TaskList = () => {
           value={keyword}
           onChange={handleKeywordChange}
           placeholder="Search task name"
+        />
+        <Dropdown
+          value={sortBy}
+          onChange={handleSortByChange}
+          options={SORT_BY}
+          optionLabel="label"
+          optionValue="code"
+          placeholder="Sort By"
+          className="ml-2"
+        />
+        <Dropdown
+          value={order}
+          onChange={handleOrderChange}
+          options={ORDER_BY}
+          placeholder="Order"
+          className="ml-2"
         />
       </div>
       <div className="overflow-scroll surface-overlay m-3 h-30rem">
