@@ -27,7 +27,7 @@ class Task {
   async getTotal(keyword: string) {
     return await db("tasks")
       .count("id as count")
-      .where("name", "like", `%${keyword}%`)
+      .whereILike("name", `%${keyword}%`)
       .first();
   }
 
@@ -48,7 +48,7 @@ class Task {
       .select("*")
       .limit(limit)
       .orderBy(sortBy, order)
-      .where("name", "like", `%${keyword}%`)
+      .whereILike("name", `%${keyword}%`)
       .offset(page * limit - limit);
     const total = await this.getTotal(keyword);
 
