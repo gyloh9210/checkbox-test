@@ -1,10 +1,19 @@
-## docker-postgres
-- run `docker compose up` to boot the postgres container
+# How to setup
+## 1. docker-postgres
+1. go to `docker-progress` folder
+1. run `docker compose up` to boot the postgres container
+1. create a database, called `checkbox`
 
-## express-backend
-- run `npn run dev` to start
-- run `npm run migrate` to start the schema initialization
-- run `npm run seed` to seed test data
+## 2. express-backend
+1. go to `express-backend` folder
+1. run `npm install` to install dependencies
+1. run `npm run migrate` to start the schema initialization
+1. run `npm run seed` to seed test data
+1. run `npn run dev` to start the server
+
+If you encountered db connection issues:
+1. Make sure you have already created a database in postgress and named it `checkbox`
+2. Make sure db credentials between `docker-postgres/docker-compose.yml` and `express-backend/.env` are matched
 
 #### Folder structure
 - controllers - determine what response to send back, validate payload and control data transmission to a model
@@ -12,8 +21,15 @@
 - model - usually contain business logic, but in this case, it just plainly read/write data to a table
 - seeds - contain seeders
 
-## task-dashboard
-- run `npm run start`to start
+## 3. task-dashboard
+1. go to `task-dashboard` folder
+1. run `npm install` to install dependencies
+1. run `npm run start`to start
+
+If you encountered backend connection issues:
+1. Please verify you are defining the correct API HOST in `task-dashboard/.env`
+
+Some libraries covered:
 - built with react
 - use primereact as it offers feature-rich UI components
 - use primeflex as it is a CSS utility library and support very well to primereact
